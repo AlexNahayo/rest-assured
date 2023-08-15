@@ -42,7 +42,11 @@ public class DifferentWaysToCreatePostRequestBody {
 
     @Test(priority = 2)
     void testDelete(){
-
+        given()
+        .when()
+            .delete("http://localhost:3000/students/4")
+        .then()
+            .statusCode(200);
     }
 
 }

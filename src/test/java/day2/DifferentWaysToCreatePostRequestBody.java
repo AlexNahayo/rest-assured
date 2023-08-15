@@ -1,5 +1,6 @@
 package day2;
 
+import org.json.JSONObject;
 import org.testng.annotations.Test;
 import java.util.HashMap;
 import static io.restassured.RestAssured.given;
@@ -35,7 +36,7 @@ public class DifferentWaysToCreatePostRequestBody {
             .body("phone", equalTo("087377373737"))
             .body("location", equalTo("France"))
             .body("course[0]", equalTo("C"))
-            .body("course[1]", equalTo("C++"))
+            .body("course[1]", equalTo("Java"))
             .header("Content-Type","application/json; charset=utf-8")
             .log().all();
     }
@@ -47,6 +48,34 @@ public class DifferentWaysToCreatePostRequestBody {
             .delete("http://localhost:3000/students/4")
         .then()
             .statusCode(200);
+    }
+
+    @Test(priority = 3)
+    public void testPostUsingJsonLibrary(){
+
+        JSONObject data = new JSONObject();
+
+        data.put("name", "Alex");
+        data.put("phone", "087377373737");
+        data.put("location", "France");
+
+        String courseArray[] = {"C", "Java"};
+        data.put("courses", courseArray);
+
+        given()
+                .contentType("application/json")
+                .body(data.toString())
+                .when()
+                .post("http://localhost:3000/students")
+                .then()
+                .statusCode(201)
+                .body("name", equalTo("Alex"))
+                .body("phone", equalTo("087377373737"))
+                .body("location", equalTo("France"))
+                .body("course[0]", equalTo("C"))
+                .body("course[1]", equalTo("Java"))
+                .header("Content-Type","application/json; charset=utf-8")
+                .log().all();
     }
 
 }
